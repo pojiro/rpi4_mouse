@@ -13,9 +13,7 @@ defmodule Rpi4Mouse.Application do
 
     children =
       [
-        # Children for all targets
-        # Starts a worker by calling: Rpi4Mouse.Worker.start_link(arg)
-        # {Rpi4Mouse.Worker, arg},
+        {Rpi4Mouse, []}
       ] ++ children(target())
 
     Supervisor.start_link(children, opts)
