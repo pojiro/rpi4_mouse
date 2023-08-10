@@ -1,6 +1,25 @@
 # Rpi4Mouse
 
-**TODO: Add description**
+## Document for ME!
+
+```
+git clone git@github.com:pojiro/rpi4_mouse.git
+export MIX_TARGET=rpi4_mouse
+mix deps.get
+export ROS_DISTRO=foxy
+mix rclex.prep.ros2 --arch arm64v8
+# copy raspimouse_msg's include/lib/share directory to rootfs_overlay/opt/ros/foxy
+mix rclex.gen.msgs
+mix firmware
+mix upload
+```
+### control from host PC with Logicool F310 Gamepad
+
+install https://github.com/rt-net/raspimouse_ros2_examples to HOST PC, then
+
+```
+ros2 launch raspimouse_ros2_examples teleop_joy.launch.py mouse:=true
+```
 
 ## Targets
 
