@@ -50,10 +50,10 @@ defmodule Rpi4Mouse.MixProject do
       # version updates, please review their release notes in case
       # changes to your application are needed.
       {:nerves_system_rpi4_mouse,
-       path: "../nerves_system_rpi4_mouse",
+       git: "https://github.com/pojiro/nerves_system_rpi4_mouse.git",
+       tag: "v1.22.2+mouse",
        runtime: false,
-       targets: :rpi4_mouse,
-       nerves: [compile: true]}
+       targets: :rpi4_mouse}
     ]
   end
 
