@@ -15,6 +15,13 @@ mix upload
 ```
 ### control from host PC with Logicool F310 Gamepad
 
+your linux user is needed to be `input` group user
+
+```
+# debian/ubuntu/mint
+sudo adduser pojiro input
+```
+
 install https://github.com/rt-net/raspimouse_ros2_examples to HOST PC, then
 
 ```
