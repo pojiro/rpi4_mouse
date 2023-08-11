@@ -50,7 +50,11 @@ config :vintage_net,
     {"eth0",
      %{
        type: VintageNetEthernet,
-       ipv4: %{method: :dhcp}
+       ipv4: %{
+         method: :static,
+         address: "169.254.169.254",
+         prefix_length: 16
+       }
      }},
     {"wlan0", %{type: VintageNetWiFi}}
   ]
