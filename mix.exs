@@ -35,11 +35,11 @@ defmodule Rpi4Mouse.MixProject do
       {:shoehorn, "~> 0.9.1"},
       {:ring_logger, "~> 0.10.0"},
       {:toolshed, "~> 0.3.0"},
+      {:raspimouse2_ex, git: "https://github.com/pojiro/raspimouse2_ex.git"},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
       {:nerves_runtime, "~> 0.13.0"},
-      {:raspimouse2_ex, git: "https://github.com/pojiro/raspimouse2_ex.git"},
 
       # Dependencies for all targets except :host
       {:nerves_pack, "~> 0.7.0", targets: @all_targets},
