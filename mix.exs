@@ -36,6 +36,7 @@ defmodule Rpi4Mouse.MixProject do
       {:ring_logger, "~> 0.10.0"},
       {:toolshed, "~> 0.3.0"},
       {:raspimouse2_ex, git: "https://github.com/pojiro/raspimouse2_ex.git"},
+      {:rpi4_mouse_ui, path: "../rpi4_mouse_ui", env: Mix.env()},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
