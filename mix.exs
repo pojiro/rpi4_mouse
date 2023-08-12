@@ -4,6 +4,7 @@ defmodule Rpi4Mouse.MixProject do
   @app :rpi4_mouse
   @version "0.1.0"
   @all_targets [:rpi4_mouse]
+  @ui_path "../rpi4_mouse_ui"
 
   def project do
     [
@@ -14,7 +15,9 @@ defmodule Rpi4Mouse.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       releases: [{@app, release()}],
-      preferred_cli_target: [run: :host, test: :host]
+      preferred_cli_target: [run: :host, test: :host],
+      aliases: aliases(),
+      ui_path: @ui_path
     ]
   end
 
@@ -36,7 +39,7 @@ defmodule Rpi4Mouse.MixProject do
       {:ring_logger, "~> 0.10.0"},
       {:toolshed, "~> 0.3.0"},
       {:raspimouse2_ex, git: "https://github.com/pojiro/raspimouse2_ex.git"},
-      {:rpi4_mouse_ui, path: "../rpi4_mouse_ui", env: Mix.env()},
+      rpi4_mouse_ui(),
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
@@ -68,5 +71,52 @@ defmodule Rpi4Mouse.MixProject do
       steps: [&Nerves.Release.init/1, :assemble],
       strip_beams: Mix.env() == :prod or [keep: ["Docs"]]
     ]
+  end
+
+  defp rpi4_mouse_ui() do
+    case {Mix.target(), Mix.env()} do
+      {:host, :dev} ->
+        {:rpi4_mouse_ui, path: @ui_path, env: Mix.env()}
+
+      _ ->
+        {:rpi4_mouse_ui, git: "git@github.com:pojiro/rpi4_mouse_ui.git", env: Mix.env()}
+    end
+  end
+
+  defp aliases() do
+    [
+      {:"phx.server", [&compile_ui_for_host/1, "phx.server"]},
+      {:"prod.firmware", [&prod_firmware/1]},
+      {:"prod.upload", [&prod_upload/1]},
+      {:"dev.firmware", [&dev_firmware/1]},
+      {:"dev.upload", [&dev_upload/1]}
+    ]
+  end
+
+  for env <- [:dev, :prod] do
+    defp unquote(:"#{env}_firmware")(_) do
+      :ok = System.put_env([{"MIX_ENV", unquote(env)}, {"MIX_TARGET", "rpi4_mouse"}])
+      firmware_impl!()
+    end
+
+    defp unquote(:"#{env}_upload")(args) do
+      :ok = System.put_env([{"MIX_ENV", unquote(env)}, {"MIX_TARGET", "rpi4_mouse"}])
+      upload_impl!(args)
+    end
+  end
+
+  defp firmware_impl!() do
+    0 = Mix.shell().cmd("mix deps.get")
+    0 = Mix.shell().cmd("mix ui.compile", cd: "deps/rpi4_mouse_ui")
+    0 = Mix.shell().cmd("mix deps.compile")
+    0 = Mix.shell().cmd("mix firmware")
+  end
+
+  defp compile_ui_for_host(args) when is_list(args) do
+    Mix.shell().cmd("mix ui.compile", cd: @ui_path)
+  end
+
+  defp upload_impl!(args) when is_list(args) do
+    0 = Mix.shell().cmd("mix upload #{Enum.join(args, " ")}")
   end
 end
