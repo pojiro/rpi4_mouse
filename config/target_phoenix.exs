@@ -6,7 +6,7 @@ import Config
 
 # Configures the endpoint
 config :rpi4_mouse_ui, Rpi4MouseUiWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "nerves.local"],
   render_errors: [
     formats: [html: Rpi4MouseUiWeb.ErrorHTML, json: Rpi4MouseUiWeb.ErrorJSON],
     layout: false
@@ -14,32 +14,32 @@ config :rpi4_mouse_ui, Rpi4MouseUiWeb.Endpoint,
   pubsub_server: Rpi4MouseUi.PubSub,
   live_view: [signing_salt: "GP3VRFMz"]
 
-# Configure esbuild (the version is required)
-config :esbuild,
-  version: "0.17.11",
-  default: [
-    args:
-      ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
-    cd: Path.expand("../assets", __DIR__),
-    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
-  ]
-
-# Configure tailwind (the version is required)
-config :tailwind,
-  version: "3.3.2",
-  default: [
-    args: ~w(
-      --config=tailwind.config.js
-      --input=css/app.css
-      --output=../priv/static/assets/app.css
-    ),
-    cd: Path.expand("../assets", __DIR__)
-  ]
-
-# Configures Elixir's Logger
-config :logger, :console,
-  format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id]
+# # Configure esbuild (the version is required)
+# config :esbuild,
+#   version: "0.17.11",
+#   default: [
+#     args:
+#       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+#     cd: Path.expand("../assets", __DIR__),
+#     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+#   ]
+# 
+# # Configure tailwind (the version is required)
+# config :tailwind,
+#   version: "3.3.2",
+#   default: [
+#     args: ~w(
+#       --config=tailwind.config.js
+#       --input=css/app.css
+#       --output=../priv/static/assets/app.css
+#     ),
+#     cd: Path.expand("../assets", __DIR__)
+#   ]
+# 
+# # Configures Elixir's Logger
+# config :logger, :console,
+#   format: "$time $metadata[$level] $message\n",
+#   metadata: [:request_id]
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
@@ -57,14 +57,14 @@ config :phoenix, :json_library, Jason
 config :rpi4_mouse_ui, Rpi4MouseUiWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {0, 0, 0, 0}, port: 80],
   check_origin: false,
-  code_reloader: true,
+  # code_reloader: true,
   debug_errors: true,
   secret_key_base: "T5BhQQHaBRUuY8NxppaaD/q5cDdcibJPZilnGF06wbLZrcm3oHAqkHrI30S6WhVe",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
+    # esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    # tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -90,15 +90,15 @@ config :rpi4_mouse_ui, Rpi4MouseUiWeb.Endpoint,
 # configured to run both http and https servers on
 # different ports.
 
-# Watch static and templates for browser reloading.
-config :rpi4_mouse_ui, Rpi4MouseUiWeb.Endpoint,
-  live_reload: [
-    patterns: [
-      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
-      ~r"priv/gettext/.*(po)$",
-      ~r"lib/rpi4_mouse_ui_web/(controllers|live|components)/.*(ex|heex)$"
-    ]
-  ]
+# # Watch static and templates for browser reloading.
+# config :rpi4_mouse_ui, Rpi4MouseUiWeb.Endpoint,
+#   live_reload: [
+#     patterns: [
+#       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+#       ~r"priv/gettext/.*(po)$",
+#       ~r"lib/rpi4_mouse_ui_web/(controllers|live|components)/.*(ex|heex)$"
+#     ]
+#   ]
 
 # Enable dev routes for dashboard and mailbox
 config :rpi4_mouse_ui, dev_routes: true
@@ -126,7 +126,7 @@ config :rpi4_mouse_ui, Rpi4MouseUiWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
-config :logger, level: :info
+# config :logger, level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
