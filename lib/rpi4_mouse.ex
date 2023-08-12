@@ -11,8 +11,8 @@ defmodule Rpi4Mouse do
   end
 
   def init(_args) do
-    if bin = System.find_executable("modprobe") do
-      {_, 0} = System.cmd(bin, ~w"rtmouse.ko")
+    with bin <- System.find_executable("modprobe"),
+         {_, 0} <- System.cmd(bin, ~w"rtmouse.ko") do
       send(self(), :start)
     end
 
