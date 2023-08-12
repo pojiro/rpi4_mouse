@@ -25,7 +25,7 @@ defmodule Rpi4Mouse.MixProject do
   def application do
     [
       mod: {Rpi4Mouse.Application, []},
-      extra_applications: [:logger, :runtime_tools, :inets, :ssl],
+      extra_applications: [:logger, :runtime_tools, :inets, :ssl, :os_mon],
       included_applications: [:raspimouse2_ex]
     ]
   end
