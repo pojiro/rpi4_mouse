@@ -28,6 +28,24 @@ defmodule Rpi4Mouse do
     Application.ensure_all_started(:raspimouse2_ex)
     |> tap(&Logger.info("#{__MODULE__}: ensure_all_started return is #{inspect(&1)}"))
 
+    send(self(), :publish)
+
+    {:noreply, state}
+  end
+
+  def handle_info(:publish, state) do
+    msg = %{
+      is_motor_enable?: Raspimouse2Ex.is_motor_enable?(),
+      left_motor_state: Raspimouse2Ex.get_left_motor_state(),
+      right_motor_state: Raspimouse2Ex.get_right_motor_state(),
+      light_sensors_values: Raspimouse2Ex.get_light_sensors_values(),
+      buzzer_tone: Raspimouse2Ex.get_buzzer_tone()
+    }
+
+    Phoenix.PubSub.broadcast(Rpi4MouseUi.PubSub, "Rpi4Mouse", msg)
+
+    Process.send_after(self(), :publish, 100)
+
     {:noreply, state}
   end
 end
