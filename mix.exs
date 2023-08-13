@@ -76,11 +76,11 @@ defmodule Rpi4Mouse.MixProject do
 
   defp rpi4_mouse_ui() do
     case {Mix.target(), Mix.env()} do
-      {:host, :dev} ->
-        {:rpi4_mouse_ui, path: @ui_path, env: Mix.env()}
+      {:host, :dev = env} ->
+        {:rpi4_mouse_ui, path: @ui_path, env: env}
 
-      _ ->
-        {:rpi4_mouse_ui, git: "git@github.com:pojiro/rpi4_mouse_ui.git", env: Mix.env()}
+      {_target, env} ->
+        {:rpi4_mouse_ui, git: "git@github.com:pojiro/rpi4_mouse_ui.git", env: env}
     end
   end
 
