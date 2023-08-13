@@ -136,3 +136,18 @@ config :phoenix, :plug_init_mode, :runtime
 #
 
 # config :rpi4_mouse_ui, Rpi4MouseUiWeb.Endpoint, server: true
+
+#
+# custom
+#
+
+# See. https://github.com/phoenixframework/phoenix_live_reload#backends
+# This setting is not written in document, only in README.md.
+config :phoenix_live_reload,
+  dirs: [
+    "#{Mix.Project.config()[:ui_path]}/priv/static",
+    "#{Mix.Project.config()[:ui_path]}/priv/gettext",
+    "#{Mix.Project.config()[:ui_path]}/lib/rpi4_mouse_ui_web/controllers",
+    "#{Mix.Project.config()[:ui_path]}/lib/rpi4_mouse_ui_web/live",
+    "#{Mix.Project.config()[:ui_path]}/lib/rpi4_mouse_ui_web/components"
+  ]
