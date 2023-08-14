@@ -41,7 +41,7 @@
   "plug_crypto": {:hex, :plug_crypto, "1.2.5", "918772575e48e81e455818229bf719d4ab4181fcbf7f85b68a35620f78d89ced", [:mix], [], "hexpm", "26549a1d6345e2172eb1c233866756ae44a9609bd33ee6f99147ab3fd87fd842"},
   "property_table": {:hex, :property_table, "0.2.3", "675950a37dd8293e68c70e042371382bada56833fc12897b80b2745cb523f6de", [:mix], [], "hexpm", "9c3b143929ff5a98529fe44eae352e49b6f78c27701a3e7d2182c657ac433b7e"},
   "ranch": {:hex, :ranch, "1.8.0", "8c7a100a139fd57f17327b6413e4167ac559fbc04ca7448e9be9057311597a1d", [:make, :rebar3], [], "hexpm", "49fbcfd3682fab1f5d109351b61257676da1a2fdbe295904176d5e521a2ddfe5"},
-  "raspimouse2_ex": {:git, "https://github.com/pojiro/raspimouse2_ex.git", "d34de65d149a64ae79d54cab64574cad3c07f763", [branch: "add-external-api"]},
+  "raspimouse2_ex": {:git, "https://github.com/pojiro/raspimouse2_ex.git", "74e53f516bb5e4531ce7524be274c8e0f26946ae", []},
   "rclex": {:git, "https://github.com/rclex/rclex.git", "60e3d715b31e7497fbfb55bb675bbf4b302d168a", []},
   "ring_logger": {:hex, :ring_logger, "0.10.2", "f6bd562759d793ffcbe90c45713afd672ad7dc82204ac1ae190d1e35beb313a4", [:mix], [{:circular_buffer, "~> 0.4.0", [hex: :circular_buffer, repo: "hexpm", optional: false]}], "hexpm", "9cadb7960973a3f930ca67aa22d4dd89b8ab67f07d6b8970eeb18580669b0ffd"},
   "rpi4_mouse_ui": {:git, "git@github.com:pojiro/rpi4_mouse_ui.git", "17edc60b269b126596007ba93178681894bd8e26", []},
