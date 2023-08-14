@@ -13,7 +13,8 @@ defmodule Rpi4Mouse.Application do
 
     children =
       [
-        {Rpi4Mouse, []}
+        {Rpi4Mouse, []},
+        {MomoSupervisor, []}
       ] ++ children(target())
 
     Supervisor.start_link(children, opts)

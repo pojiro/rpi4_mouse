@@ -13,6 +13,7 @@ mix rclex.gen.msgs
 mix firmware
 mix upload
 ```
+
 ### control from host PC with Logicool F310 Gamepad
 
 your linux user is needed to be `input` group user
@@ -27,6 +28,12 @@ install https://github.com/rt-net/raspimouse_ros2_examples to HOST PC, then
 ```
 ros2 launch raspimouse_ros2_examples teleop_joy.launch.py mouse:=true
 ```
+
+### use [shiguredo/momo](https://github.com/shiguredo/momo) for camera
+
+1. download momo-2022.4.1_raspberry-pi-os_armv8.tar.gz from https://github.com/shiguredo/momo/releases/tag/2022.4.1
+2. untar it
+3. then copy the directory, momo-2022.4.1_raspberry-pi-os_armv8, to `rootfs_overlay/opt/momo`.
 
 ## Targets
 
