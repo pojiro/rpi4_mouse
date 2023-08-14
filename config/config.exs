@@ -25,7 +25,8 @@ config :rclex,
     "std_msgs/msg/Int16",
     "geometry_msgs/msg/Twist",
     "raspimouse_msgs/msg/LightSensors",
-    "raspimouse_msgs/msg/Leds"
+    "raspimouse_msgs/msg/Leds",
+    "raspimouse_msgs/msg/Switches"
   ]
 
 if Mix.target() == :host do
