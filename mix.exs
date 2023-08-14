@@ -41,6 +41,7 @@ defmodule Rpi4Mouse.MixProject do
       {:raspimouse2_ex,
        git: "https://github.com/pojiro/raspimouse2_ex.git", branch: "add-external-api"},
       rpi4_mouse_ui(),
+      {:muontrap, "~> 1.0"},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.
