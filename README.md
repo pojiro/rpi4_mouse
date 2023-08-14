@@ -1,5 +1,9 @@
 # Rpi4Mouse
 
+<img src="https://github.com/pojiro/rpi4_mouse/assets/4096956/13398f9f-00b7-4595-80a9-1b10e8505604"
+     style="width: 600px"
+     alt="mouse_and_gamepad">
+
 ## Document for ME!
 
 ```
