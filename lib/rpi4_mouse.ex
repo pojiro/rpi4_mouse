@@ -37,9 +37,11 @@ defmodule Rpi4Mouse do
     msg = %{
       buzzer_tone: Raspimouse2Ex.get_buzzer_tone(),
       is_motor_enable?: Raspimouse2Ex.is_motor_enable?(),
+      leds_values: Raspimouse2Ex.get_leds_values(),
       left_motor_state: Raspimouse2Ex.get_left_motor_state(),
       light_sensors_values: Raspimouse2Ex.get_light_sensors_values(),
-      right_motor_state: Raspimouse2Ex.get_right_motor_state()
+      right_motor_state: Raspimouse2Ex.get_right_motor_state(),
+      switches_values: Raspimouse2Ex.get_switches_values()
     }
 
     Phoenix.PubSub.broadcast(Rpi4MouseUi.PubSub, "Rpi4Mouse", msg)
