@@ -5,7 +5,7 @@ defmodule MomoSupervisor do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
   end
 
-  def init(args) do
+  def init(_args) do
     src_dir_path = "/opt/momo/momo-2022.4.1_raspberry-pi-os_armv8"
 
     children =
