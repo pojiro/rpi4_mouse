@@ -39,7 +39,8 @@ defmodule Rpi4Mouse.MixProject do
       {:ring_logger, "~> 0.10.0"},
       {:toolshed, "~> 0.3.0"},
       {:raspimouse2_ex,
-       git: "https://github.com/pojiro/raspimouse2_ex.git", branch: "add-external-api"},
+       git: "https://github.com/pojiro/raspimouse2_ex.git",
+       commit: "74e53f516bb5e4531ce7524be274c8e0f26946ae"},
       rpi4_mouse_ui(),
       {:muontrap, "~> 1.0"},
 
