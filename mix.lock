@@ -44,7 +44,7 @@
   "raspimouse2_ex": {:git, "https://github.com/pojiro/raspimouse2_ex.git", "a600f1af93eb7944b7916204da10b60a425d7ad8", []},
   "rclex": {:git, "https://github.com/rclex/rclex.git", "60e3d715b31e7497fbfb55bb675bbf4b302d168a", []},
   "ring_logger": {:hex, :ring_logger, "0.10.2", "f6bd562759d793ffcbe90c45713afd672ad7dc82204ac1ae190d1e35beb313a4", [:mix], [{:circular_buffer, "~> 0.4.0", [hex: :circular_buffer, repo: "hexpm", optional: false]}], "hexpm", "9cadb7960973a3f930ca67aa22d4dd89b8ab67f07d6b8970eeb18580669b0ffd"},
-  "rpi4_mouse_ui": {:git, "git@github.com:pojiro/rpi4_mouse_ui.git", "bb8e0d272b558d1b9890d95a706e8c8740ea40df", []},
+  "rpi4_mouse_ui": {:git, "git@github.com:pojiro/rpi4_mouse_ui.git", "58d69e1cc02c69838c0c34ecffa218cf2165bb59", []},
   "shoehorn": {:hex, :shoehorn, "0.9.1", "8e12670024c2942e3c2fdd27cd5a034ee0337ee7c25c37b3ebc2ad482de67199", [:mix], [], "hexpm", "fccd040ac22de9b3cc111bbf78a363832c7210010a3fff4a550fbb2f10de0692"},
   "ssh_subsystem_fwup": {:hex, :ssh_subsystem_fwup, "0.6.1", "628f8e3795de5f1d0e7b3b55de4248ab0a77ab4c47e3cd282f1dda89d6354a9f", [:mix], [], "hexpm", "babdae337f2dc011ab5478662b4ec850650d7acfb165662ae47f6f0ce8892499"},
   "tailwind": {:hex, :tailwind, "0.2.1", "83d8eadbe71a8e8f67861fe7f8d51658ecfb258387123afe4d9dc194eddc36b0", [:mix], [{:castore, ">= 0.0.0", [hex: :castore, repo: "hexpm", optional: false]}], "hexpm", "e8a13f6107c95f73e58ed1b4221744e1eb5a093cd1da244432067e19c8c9a277"},
