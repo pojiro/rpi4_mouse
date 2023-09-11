@@ -40,7 +40,7 @@ defmodule Rpi4Mouse.MixProject do
       {:toolshed, "~> 0.3.0"},
       {:raspimouse2_ex,
        git: "https://github.com/pojiro/raspimouse2_ex.git",
-       commit: "a600f1af93eb7944b7916204da10b60a425d7ad8"},
+       commit: "bb3354ce2342a06d42ecad42afb89f87aa77ef41"},
       rpi4_mouse_ui(),
       {:muontrap, "~> 1.0"},
 

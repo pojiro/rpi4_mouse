@@ -10,9 +10,9 @@
 git clone git@github.com:pojiro/rpi4_mouse.git
 export MIX_TARGET=rpi4_mouse
 mix deps.get
-export ROS_DISTRO=foxy
+export ROS_DISTRO=humble
 mix rclex.prep.ros2 --arch arm64v8
-# copy raspimouse_msg's include/lib/share directory to rootfs_overlay/opt/ros/foxy
+# copy raspimouse_msg's include/lib/share directory to rootfs_overlay/opt/ros/humble
 mix rclex.gen.msgs
 mix firmware
 mix upload
