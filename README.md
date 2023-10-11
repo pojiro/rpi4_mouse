@@ -8,23 +8,24 @@
 
 ```
 git clone git@github.com:pojiro/rpi4_mouse.git
+cd rpi4_mouse
 export MIX_TARGET=rpi4_mouse
 mix deps.get
 export ROS_DISTRO=humble
 mix rclex.prep.ros2 --arch arm64v8
 # copy raspimouse_msg's include/lib/share directory to rootfs_overlay/opt/ros/humble
 mix rclex.gen.msgs
-mix firmware
-mix upload
+mix prod.firmware
+mix prod.upload
 ```
 
 ### control from host PC with Logicool F310 Gamepad
 
-your linux user is needed to be `input` group user
+your linux user is needed to be `input` group user (then, you may need to reboot host PC)
 
 ```
 # debian/ubuntu/mint
-sudo adduser pojiro input
+sudo adduser $USER input
 ```
 
 install https://github.com/rt-net/raspimouse_ros2_examples to HOST PC, then
@@ -37,7 +38,7 @@ ros2 launch raspimouse_ros2_examples teleop_joy.launch.py mouse:=true
 
 1. download momo-2022.4.1_raspberry-pi-os_armv8.tar.gz from https://github.com/shiguredo/momo/releases/tag/2022.4.1
 2. untar it
-3. then copy the directory, momo-2022.4.1_raspberry-pi-os_armv8, to `rootfs_overlay/opt/momo`.
+3. then copy the entire directory, `momo-2022.4.1_raspberry-pi-os_armv8`, to `rootfs_overlay/opt/momo/`.
 
 ## Targets
 
