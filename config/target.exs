@@ -52,8 +52,8 @@ config :vintage_net,
        type: VintageNetEthernet,
        ipv4: %{
          method: :static,
-         address: "169.254.169.254",
-         prefix_length: 16
+         address: "192.168.0.33",
+         prefix_length: 24
        }
      }},
     {"wlan0", %{type: VintageNetWiFi}}
