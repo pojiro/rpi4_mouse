@@ -1,70 +1,203 @@
 # Rpi4Mouse
 
+[Raspberry Pi Mouse](https://rt-net.jp/products/raspberrypimousev3/) integrated with [Nerves](https://nerves-project.org/) and [rclex](https://github.com/rclex/rclex) for ROS2 support.
+
 <img src="https://github.com/pojiro/rpi4_mouse/assets/4096956/13398f9f-00b7-4595-80a9-1b10e8505604"
      style="width: 600px"
      alt="mouse_and_gamepad">
 
-## Document for ME!
+## Features
 
-```
+- **Direct device driver control**: Interfaces directly with RT Mouse kernel modules
+- **ROS2 integration**: Subscribes to `/cmd_vel`, `/buzzer`, `/leds` and publishes `/light_sensors`, `/switches`
+- **Phoenix LiveView UI**: Real-time web UI for monitoring sensor data and motor states
+- **Modular architecture**: Clean separation between device layer, ROS2 layer, and UI layer
+
+## Architecture
+
+### Device Layer (`Rpi4Mouse.Rtmouse.*`)
+
+Direct control of RT Mouse hardware via device files created by the `rtmouse.ko` kernel module:
+
+- **Motors** (`/dev/rtmotor_raw_l0`, `/dev/rtmotor_raw_r0`, `/dev/rtmotoren0`): Differential drive control with velocity/PWM conversion
+- **Buzzer** (`/dev/rtbuzzer0`): Frequency control (0-20000 Hz)
+- **LEDs** (`/dev/rtled0-3`): Individual LED control
+- **LightSensors** (`/dev/rtlightsensor0`): 4-channel light sensor readings
+- **Switches** (`/dev/rtswitch0-2`): 3 push button states
+
+### ROS2 Layer (`Rpi4Mouse.Rclex.*`)
+
+ROS2 subscribers and publishers via [rclex](https://github.com/rclex/rclex):
+
+**Subscribers:**
+- `/cmd_vel` (geometry_msgs/TwistStamped) → Motors
+- `/buzzer` (std_msgs/Int16) → Buzzer
+- `/leds` (raspimouse_msgs/Leds) → LEDs
+
+**Publishers:**
+- `/light_sensors` (raspimouse_msgs/LightSensors)
+- `/switches` (raspimouse_msgs/Switches)
+
+### UI Layer
+
+- **UiPublisher**: Broadcasts device states to Phoenix LiveView UI at 100ms intervals
+- **Web UI**: Real-time monitoring via Phoenix LiveView (from `rpi4_mouse_ui` dependency)
+
+## Quick Start
+
+### Build and Deploy
+
+```bash
 git clone git@github.com:pojiro/rpi4_mouse.git
 cd rpi4_mouse
 export MIX_TARGET=rpi4_mouse
+
+# Get dependencies
 mix deps.get
-export ROS_DISTRO=humble
+mix deps.compile
+
+# Prepare ROS2 (for arm64v8 target)
+export ROS_DISTRO=jazzy
 mix rclex.prep.ros2 --arch arm64v8
-# copy raspimouse_msg's include/lib/share directory to rootfs_overlay/opt/ros/humble
+
+# Copy raspimouse_msgs include/lib/share to rootfs_overlay/opt/ros/jazzy
+# Generate ROS2 message bindings
 mix rclex.gen.msgs
+
+# Build and upload firmware
 mix prod.firmware
 mix prod.upload
 ```
 
-### control from host PC with Logicool F310 Gamepad
+### Control from Host PC
 
-your linux user is needed to be `input` group user (then, you may need to reboot host PC)
+#### With Logicool F310 Gamepad
 
-```
-# debian/ubuntu/mint
+Add your user to the `input` group (requires reboot):
+
+```bash
+# Debian/Ubuntu/Mint
 sudo adduser $USER input
 ```
 
-install https://github.com/rt-net/raspimouse_ros2_examples to HOST PC, then
+Install [raspimouse_ros2_examples](https://github.com/rt-net/raspimouse_ros2_examples) on your host PC:
 
-```
+```bash
 ros2 launch raspimouse_ros2_examples teleop_joy.launch.py mouse:=true
 ```
 
-### use [shiguredo/momo](https://github.com/shiguredo/momo) for camera
+#### Web UI
 
-1. download momo-2022.4.1_raspberry-pi-os_armv8.tar.gz from https://github.com/shiguredo/momo/releases/tag/2022.4.1
-2. untar it
-3. then copy the entire directory, `momo-2022.4.1_raspberry-pi-os_armv8`, to `rootfs_overlay/opt/momo/`.
+Access the Phoenix LiveView UI at `http://nerves.local` (or your device's IP address).
+
+## API Reference
+
+### Device Control APIs
+
+```elixir
+# Motors - Drive with linear/angular velocity
+Rpi4Mouse.Rtmouse.Motors.drive(linear_x, angular_z)
+Rpi4Mouse.Rtmouse.Motors.get_state()
+
+# Buzzer - Set frequency (0-20000 Hz)
+Rpi4Mouse.Rtmouse.Buzzer.beep(hz)
+Rpi4Mouse.Rtmouse.Buzzer.get_tone()
+
+# LEDs - Control individual LEDs
+Rpi4Mouse.Rtmouse.Leds.light(%{led0: true, led1: false, led2: true, led3: false})
+Rpi4Mouse.Rtmouse.Leds.get_lights()
+
+# Sensors - Read current values
+Rpi4Mouse.Rtmouse.LightSensors.get_values()  # => %{forward_r:, right:, left:, forward_l:}
+Rpi4Mouse.Rtmouse.Switches.get_values()      # => %{switch0:, switch1:, switch2:}
+```
+
+### ROS2 Publisher Control
+
+```elixir
+# Control sensor publishing (reducing kernel log spam)
+Rpi4Mouse.Rclex.LightSensorsPublisher.stop_publish()
+Rpi4Mouse.Rclex.LightSensorsPublisher.start_publish()
+Rpi4Mouse.Rclex.LightSensorsPublisher.set_publish_interval(200)  # ms
+
+Rpi4Mouse.Rclex.SwitchesPublisher.stop_publish()
+Rpi4Mouse.Rclex.SwitchesPublisher.start_publish()
+Rpi4Mouse.Rclex.SwitchesPublisher.set_publish_interval(200)  # ms
+```
+
+### UI Publishing Control
+
+```elixir
+# Control web UI updates
+Rpi4Mouse.UiPublisher.stop_publish()
+Rpi4Mouse.UiPublisher.start_publish()
+Rpi4Mouse.UiPublisher.set_publish_interval(100)  # ms
+```
+
+## Configuration
+
+### Optional: Camera Streaming with Momo
+
+To enable camera streaming with [shiguredo/momo](https://github.com/shiguredo/momo):
+
+1. Download `momo-2025.1.0_raspberry-pi-os_armv8.tar.gz` from [releases](https://github.com/shiguredo/momo/releases/tag/2025.1.0)
+2. Extract and copy the entire directory to `rootfs_overlay/opt/momo/`
+3. Rebuild firmware
+
+## Development
+
+### Type Checking
+
+The project uses [Dialyxir](https://github.com/jeremyjh/dialyxir) for static type analysis:
+
+```bash
+mix dialyzer
+```
+
+### Code Formatting
+
+```bash
+mix format
+```
+
+### Development Firmware
+
+For faster iteration during development:
+
+```bash
+# Build and upload development firmware (includes extra tools)
+mix dev.firmware && mix dev.upload
+```
+
+### IEx Access
+
+Connect to the running device via SSH:
+
+```bash
+ssh nerves.local
+```
 
 ## Targets
 
-Nerves applications produce images for hardware targets based on the
-`MIX_TARGET` environment variable. If `MIX_TARGET` is unset, `mix` builds an
-image that runs on the host (e.g., your laptop). This is useful for executing
-logic tests, running utilities, and debugging. Other targets are represented by
-a short name like `rpi3` that maps to a Nerves system image for that platform.
-All of this logic is in the generated `mix.exs` and may be customized. For more
-information about targets see:
+This Nerves application targets `rpi4_mouse`, a custom Nerves system based on Raspberry Pi 4 with RT Mouse kernel modules.
 
-https://hexdocs.pm/nerves/targets.html#content
+- **Host target** (`MIX_TARGET` unset): For running tests and utilities on your development machine
+- **rpi4_mouse target** (`MIX_TARGET=rpi4_mouse`): For deploying to Raspberry Pi Mouse hardware
 
-## Getting Started
+For more information about Nerves targets:
+https://hexdocs.pm/nerves/targets.html
 
-To start your Nerves app:
-  * `export MIX_TARGET=my_target` or prefix every command with
-    `MIX_TARGET=my_target`. For example, `MIX_TARGET=rpi3`
-  * Install dependencies with `mix deps.get`
-  * Create firmware with `mix firmware`
-  * Burn to an SD card with `mix burn`
+## Dependencies
+
+- **Elixir**: 1.18+
+- **Erlang/OTP**: 28+
+- **Nerves**: 1.10+
+- **rclex**: ROS2 Jazzy integration
+- **Phoenix LiveView**: Web UI framework
 
 ## Learn more
 
-  * Official docs: https://hexdocs.pm/nerves/getting-started.html
-  * Official website: https://nerves-project.org/
-  * Forum: https://elixirforum.com/c/nerves-forum
-  * Discussion Slack elixir-lang #nerves ([Invite](https://elixir-slackin.herokuapp.com/))
-  * Source: https://github.com/nerves-project/nerves
+* Official Nerves docs: https://hexdocs.pm/nerves/getting-started.html
+* Nerves Project: https://nerves-project.org/
+* Raspberry Pi Mouse: https://rt-net.jp/products/raspberrypimousev3/
+* rclex: https://github.com/rclex/rclex
