@@ -3,6 +3,8 @@ defmodule Rpi4Mouse.Rtmouse do
 
   require Logger
 
+  alias Rpi4Mouse.Rtmouse.Motors
+
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
   end
@@ -22,7 +24,14 @@ defmodule Rpi4Mouse.Rtmouse do
         end
     end
 
-    children = []
+    children = [
+      {Motors,
+       [
+         left_device: "/dev/rtmotor_raw_l0",
+         right_device: "/dev/rtmotor_raw_r0",
+         enable_device: "/dev/rtmotoren0"
+       ]}
+    ]
 
     Supervisor.init(children, strategy: :one_for_one)
   end

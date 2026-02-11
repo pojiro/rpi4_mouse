@@ -37,9 +37,7 @@ defmodule Rpi4Mouse.Rclex.CmdVelSubscriber do
   def handle_info({:cmd_vel, msg}, state) do
     Logger.debug("#{__MODULE__}: received /cmd_vel: #{inspect(msg)}")
 
-    # TODO: モーター制御を呼び出す
-    # Task.start_link(fn -> Rpi4Mouse.Rtmouse.Motor.drive(:left, msg) end)
-    # Task.start_link(fn -> Rpi4Mouse.Rtmouse.Motor.drive(:right, msg) end)
+    Rpi4Mouse.Rtmouse.Motors.drive(msg)
 
     {:noreply, state}
   end
