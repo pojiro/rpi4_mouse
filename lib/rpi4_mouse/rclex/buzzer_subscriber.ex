@@ -15,10 +15,11 @@ defmodule Rpi4Mouse.Rclex.BuzzerSubscriber do
 
   def init(args) do
     node_name = Keyword.fetch!(args, :node_name)
+    pid = self()
 
     :ok =
       Rclex.start_subscription(
-        fn msg -> send(self(), {:buzzer, msg}) end,
+        fn msg -> send(pid, {:buzzer, msg}) end,
         StdMsgs.Msg.Int16,
         "/buzzer",
         node_name

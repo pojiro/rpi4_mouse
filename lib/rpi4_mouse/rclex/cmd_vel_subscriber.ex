@@ -15,10 +15,11 @@ defmodule Rpi4Mouse.Rclex.CmdVelSubscriber do
 
   def init(args) do
     node_name = Keyword.fetch!(args, :node_name)
+    pid = self()
 
     :ok =
       Rclex.start_subscription(
-        fn msg -> send(self(), {:cmd_vel, msg}) end,
+        fn msg -> send(pid, {:cmd_vel, msg}) end,
         GeometryMsgs.Msg.TwistStamped,
         "/cmd_vel",
         node_name

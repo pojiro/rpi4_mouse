@@ -31,12 +31,11 @@ defmodule Rpi4Mouse.Rclex do
     case VintageNet.get(["interface", ifname, "connection"]) do
       status when status in [:lan, :internet] ->
         Logger.info("#{__MODULE__}: interface #{ifname} is up with status: #{status}")
-        Process.sleep(3000)
         :ok
 
       _ ->
         Logger.debug("#{__MODULE__}: waiting for interface #{ifname}...")
-        Process.sleep(3000)
+        Process.sleep(1000)
         wait_for_interface(ifname)
     end
   end
