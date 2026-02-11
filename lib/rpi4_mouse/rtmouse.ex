@@ -8,15 +8,18 @@ defmodule Rpi4Mouse.Rtmouse do
   end
 
   def init(_args) do
-    cond do
-      is_nil(System.find_executable("modprobe")) ->
+    case System.find_executable("modprobe") do
+      nil ->
         Logger.error("modprobe not found")
 
-      {_, 0} = System.cmd("modprobe", ~w"rtmouse.ko") ->
-        Logger.info("rtmouse.ko loaded")
+      modprobe_path ->
+        case System.cmd(modprobe_path, ~w"rtmouse.ko") do
+          {_, 0} ->
+            Logger.info("rtmouse.ko loaded")
 
-      true ->
-        Logger.error("Failed to load rtmouse.ko")
+          _ ->
+            Logger.error("Failed to load rtmouse.ko")
+        end
     end
 
     children = []
