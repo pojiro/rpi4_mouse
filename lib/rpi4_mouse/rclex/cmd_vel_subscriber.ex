@@ -7,6 +7,10 @@ defmodule Rpi4Mouse.Rclex.CmdVelSubscriber do
 
   # API
 
+  def set_debug(debug) when is_boolean(debug) do
+    GenServer.cast(__MODULE__, {:set_debug, debug})
+  end
+
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
@@ -15,6 +19,7 @@ defmodule Rpi4Mouse.Rclex.CmdVelSubscriber do
 
   def init(args) do
     node_name = Keyword.fetch!(args, :node_name)
+    debug = Keyword.get(args, :debug, false)
     pid = self()
 
     :ok =
@@ -27,7 +32,7 @@ defmodule Rpi4Mouse.Rclex.CmdVelSubscriber do
 
     Logger.info("#{__MODULE__}: subscribed to /cmd_vel")
 
-    {:ok, %{}}
+    {:ok, %{debug: debug}}
   end
 
   def terminate(_reason, _state) do
@@ -35,10 +40,17 @@ defmodule Rpi4Mouse.Rclex.CmdVelSubscriber do
   end
 
   def handle_info({:cmd_vel, msg}, state) do
-    Logger.debug("#{__MODULE__}: received /cmd_vel: #{inspect(msg)}")
+    if state.debug do
+      Logger.debug("#{__MODULE__}: received /cmd_vel: #{inspect(msg)}")
+    end
 
     Rpi4Mouse.Rtmouse.Motors.drive(msg)
 
     {:noreply, state}
+  end
+
+  def handle_cast({:set_debug, debug}, state) do
+    Logger.info("#{__MODULE__}: debug #{if debug, do: "enabled", else: "disabled"}")
+    {:noreply, %{state | debug: debug}}
   end
 end

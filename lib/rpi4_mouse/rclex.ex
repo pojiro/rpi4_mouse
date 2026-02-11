@@ -22,8 +22,8 @@ defmodule Rpi4Mouse.Rclex do
 
     children = [
       {CmdVelSubscriber, [node_name: node_name]},
-      {LedsSubscriber, [node_name: node_name]},
-      {BuzzerSubscriber, [node_name: node_name]}
+      {BuzzerSubscriber, [node_name: node_name]},
+      {LedsSubscriber, [node_name: node_name]}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

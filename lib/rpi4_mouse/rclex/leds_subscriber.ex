@@ -7,6 +7,10 @@ defmodule Rpi4Mouse.Rclex.LedsSubscriber do
 
   # API
 
+  def set_debug(debug) when is_boolean(debug) do
+    GenServer.cast(__MODULE__, {:set_debug, debug})
+  end
+
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
@@ -15,6 +19,7 @@ defmodule Rpi4Mouse.Rclex.LedsSubscriber do
 
   def init(args) do
     node_name = Keyword.fetch!(args, :node_name)
+    debug = Keyword.get(args, :debug, false)
     pid = self()
 
     :ok =
@@ -27,7 +32,7 @@ defmodule Rpi4Mouse.Rclex.LedsSubscriber do
 
     Logger.info("#{__MODULE__}: subscribed to /leds")
 
-    {:ok, %{}}
+    {:ok, %{debug: debug}}
   end
 
   def terminate(_reason, _state) do
@@ -35,7 +40,9 @@ defmodule Rpi4Mouse.Rclex.LedsSubscriber do
   end
 
   def handle_info({:leds, msg}, state) do
-    Logger.debug("#{__MODULE__}: received /leds: #{inspect(msg)}")
+    if state.debug do
+      Logger.debug("#{__MODULE__}: received /leds: #{inspect(msg)}")
+    end
 
     # TODO: LED制御を呼び出す
     # Task.start_link(fn -> Rpi4Mouse.Rtmouse.Led.drive(:led0, msg) end)
@@ -44,5 +51,10 @@ defmodule Rpi4Mouse.Rclex.LedsSubscriber do
     # Task.start_link(fn -> Rpi4Mouse.Rtmouse.Led.drive(:led3, msg) end)
 
     {:noreply, state}
+  end
+
+  def handle_cast({:set_debug, debug}, state) do
+    Logger.info("#{__MODULE__}: debug #{if debug, do: "enabled", else: "disabled"}")
+    {:noreply, %{state | debug: debug}}
   end
 end
