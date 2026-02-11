@@ -83,8 +83,6 @@ defmodule Rpi4Mouse.Rtmouse.Motors do
       IO.write(state.left, "#{left_pwm}")
       IO.write(state.right, "#{right_pwm}")
 
-      Logger.debug("#{__MODULE__}: left_pwm=#{left_pwm}, right_pwm=#{right_pwm}")
-
       new_state = %{state | left_pwm: left_pwm, right_pwm: right_pwm}
 
       # タイムアウト付きで返す: @timeout_ms 間メッセージが来なければ handle_info(:timeout) が呼ばれる
