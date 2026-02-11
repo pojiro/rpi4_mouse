@@ -9,10 +9,6 @@ defmodule Rpi4Mouse.Rtmouse.Motors do
 
   # API
 
-  def start_link(args) do
-    GenServer.start_link(__MODULE__, args, name: __MODULE__)
-  end
-
   @spec drive(msg :: map()) :: :ok
   def drive(%{twist: %{linear: %{x: x}, angular: %{z: z}}} = _msg) do
     GenServer.call(__MODULE__, {:drive, {x, z}})
@@ -21,6 +17,10 @@ defmodule Rpi4Mouse.Rtmouse.Motors do
   @spec get_state() :: map()
   def get_state() do
     GenServer.call(__MODULE__, :get_state)
+  end
+
+  def start_link(args) do
+    GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
 
   # Callbacks

@@ -44,8 +44,7 @@ defmodule Rpi4Mouse.Rclex.BuzzerSubscriber do
       Logger.debug("#{__MODULE__}: received /buzzer: #{inspect(msg)}")
     end
 
-    # TODO: ブザー制御を呼び出す
-    # Rpi4Mouse.Rtmouse.Buzzer.beep(msg)
+    Rpi4Mouse.Rtmouse.Buzzer.beep(msg)
 
     {:noreply, state}
   end
