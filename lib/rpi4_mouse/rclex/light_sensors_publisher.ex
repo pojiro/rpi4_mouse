@@ -20,6 +20,22 @@ defmodule Rpi4Mouse.Rclex.LightSensorsPublisher do
 
   def set_publish_interval(_interval_ms), do: {:error, :invalid_interval}
 
+  @doc """
+  Stop publishing light sensor values.
+  """
+  @spec stop_publish() :: :ok
+  def stop_publish() do
+    GenServer.cast(__MODULE__, :stop_publish)
+  end
+
+  @doc """
+  Resume publishing light sensor values.
+  """
+  @spec start_publish() :: :ok
+  def start_publish() do
+    GenServer.cast(__MODULE__, :start_publish)
+  end
+
   def start_link(args) do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
@@ -34,13 +50,15 @@ defmodule Rpi4Mouse.Rclex.LightSensorsPublisher do
 
     send(self(), :publish)
 
-    {:ok, %{node_name: node_name, interval_ms: interval_ms}}
+    {:ok, %{node_name: node_name, interval_ms: interval_ms, enabled?: true}}
   end
 
   def handle_info(:publish, state) do
-    values = LightSensors.get_values()
-    msg = struct(RaspimouseMsgs.Msg.LightSensors, values)
-    :ok = Rclex.publish(msg, "/light_sensors", state.node_name)
+    if state.enabled? do
+      values = LightSensors.get_values()
+      msg = struct(RaspimouseMsgs.Msg.LightSensors, values)
+      :ok = Rclex.publish(msg, "/light_sensors", state.node_name)
+    end
 
     Process.send_after(self(), :publish, state.interval_ms)
 
@@ -50,5 +68,15 @@ defmodule Rpi4Mouse.Rclex.LightSensorsPublisher do
   def handle_cast({:set_interval, interval_ms}, state) do
     Logger.info("#{__MODULE__}: publish interval set to #{interval_ms}ms")
     {:noreply, %{state | interval_ms: interval_ms}}
+  end
+
+  def handle_cast(:stop_publish, state) do
+    Logger.info("#{__MODULE__}: publish stopped")
+    {:noreply, %{state | enabled?: false}}
+  end
+
+  def handle_cast(:start_publish, state) do
+    Logger.info("#{__MODULE__}: publish started")
+    {:noreply, %{state | enabled?: true}}
   end
 end
