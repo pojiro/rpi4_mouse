@@ -3,7 +3,7 @@
 [Raspberry Pi Mouse](https://rt-net.jp/products/raspberrypimousev3/) integrated with [Nerves](https://nerves-project.org/) and [rclex](https://github.com/rclex/rclex) for ROS2 support.
 
 <img src="https://github.com/pojiro/rpi4_mouse/assets/4096956/13398f9f-00b7-4595-80a9-1b10e8505604"
-     style="width: 600px"
+     width="600"
      alt="mouse_and_gamepad">
 
 ## Features
@@ -115,7 +115,7 @@ Rpi4Mouse.Rtmouse.Switches.get_values()      # => %{switch0:, switch1:, switch2:
 ### ROS2 Publisher Control
 
 ```elixir
-# Control sensor publishing (reducing kernel log spam)
+# Control sensor publishing
 Rpi4Mouse.Rclex.LightSensorsPublisher.stop_publish()
 Rpi4Mouse.Rclex.LightSensorsPublisher.start_publish()
 Rpi4Mouse.Rclex.LightSensorsPublisher.set_publish_interval(200)  # ms
