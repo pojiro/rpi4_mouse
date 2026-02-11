@@ -5,6 +5,7 @@ defmodule Rpi4Mouse.Rclex do
 
   alias Rpi4Mouse.Rclex.CmdVelSubscriber
   alias Rpi4Mouse.Rclex.BuzzerSubscriber
+  alias Rpi4Mouse.Rclex.LedsSubscriber
 
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
@@ -21,6 +22,7 @@ defmodule Rpi4Mouse.Rclex do
 
     children = [
       {CmdVelSubscriber, [node_name: node_name]},
+      {LedsSubscriber, [node_name: node_name]},
       {BuzzerSubscriber, [node_name: node_name]}
     ]
 
