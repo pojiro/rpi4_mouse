@@ -25,8 +25,7 @@ defmodule Rpi4Mouse.MixProject do
   def application do
     [
       mod: {Rpi4Mouse.Application, []},
-      extra_applications: [:logger, :runtime_tools, :inets, :ssl, :os_mon],
-      included_applications: [:raspimouse2_ex]
+      extra_applications: [:logger, :runtime_tools, :inets, :ssl, :os_mon]
     ]
   end
 
@@ -36,10 +35,12 @@ defmodule Rpi4Mouse.MixProject do
       # Dependencies for all targets
       {:nerves, "~> 1.10", runtime: false},
       {:shoehorn, "~> 0.9.1"},
-      {:ring_logger, "~> 0.10.0"},
-      {:toolshed, "~> 0.3.0"},
-      {:raspimouse2_ex,
-       git: "https://github.com/pojiro/raspimouse2_ex.git", branch: "rclex-0.10.0-dev"},
+      {:ring_logger, "~> 0.11.0"},
+      {:toolshed, "~> 0.4.0"},
+      {:rclex,
+       git: "https://github.com/rclex/rclex",
+       branch: "support-jazzy-rclex-prep-ros2",
+       override: true},
       rpi4_mouse_ui(),
       {:muontrap, "~> 1.0"},
 
@@ -57,7 +58,7 @@ defmodule Rpi4Mouse.MixProject do
       # changes to your application are needed.
       {:nerves_system_rpi4_mouse,
        git: "https://github.com/pojiro/nerves_system_rpi4_mouse.git",
-       tag: "v1.22.2+mouse",
+       tag: "v1.33.0+mouse",
        runtime: false,
        targets: :rpi4_mouse}
     ]
