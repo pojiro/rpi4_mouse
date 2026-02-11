@@ -23,7 +23,7 @@ config :nerves, source_date_epoch: "1691395509"
 config :rclex,
   ros2_message_types: [
     "std_msgs/msg/Int16",
-    "geometry_msgs/msg/Twist",
+    "geometry_msgs/msg/TwistStamped",
     "raspimouse_msgs/msg/LightSensors",
     "raspimouse_msgs/msg/Leds",
     "raspimouse_msgs/msg/Switches"

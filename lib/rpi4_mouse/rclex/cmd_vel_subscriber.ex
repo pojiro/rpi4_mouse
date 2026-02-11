@@ -19,7 +19,7 @@ defmodule Rpi4Mouse.Rclex.CmdVelSubscriber do
     :ok =
       Rclex.start_subscription(
         fn msg -> send(self(), {:cmd_vel, msg}) end,
-        GeometryMsgs.Msg.Twist,
+        GeometryMsgs.Msg.TwistStamped,
         "/cmd_vel",
         node_name
       )
