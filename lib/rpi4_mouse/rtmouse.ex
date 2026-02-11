@@ -6,6 +6,8 @@ defmodule Rpi4Mouse.Rtmouse do
   alias Rpi4Mouse.Rtmouse.Motors
   alias Rpi4Mouse.Rtmouse.Buzzer
   alias Rpi4Mouse.Rtmouse.Leds
+  alias Rpi4Mouse.Rtmouse.LightSensors
+  alias Rpi4Mouse.Rtmouse.Switches
 
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
@@ -40,6 +42,13 @@ defmodule Rpi4Mouse.Rtmouse do
          led1_device: "/dev/rtled1",
          led2_device: "/dev/rtled2",
          led3_device: "/dev/rtled3"
+       ]},
+      {LightSensors, [light_sensor_device: "/dev/rtlightsensor0"]},
+      {Switches,
+       [
+         switch0_device: "/dev/rtswitch0",
+         switch1_device: "/dev/rtswitch1",
+         switch2_device: "/dev/rtswitch2"
        ]}
     ]
 

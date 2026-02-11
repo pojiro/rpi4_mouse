@@ -6,6 +6,8 @@ defmodule Rpi4Mouse.Rclex do
   alias Rpi4Mouse.Rclex.CmdVelSubscriber
   alias Rpi4Mouse.Rclex.BuzzerSubscriber
   alias Rpi4Mouse.Rclex.LedsSubscriber
+  alias Rpi4Mouse.Rclex.LightSensorsPublisher
+  alias Rpi4Mouse.Rclex.SwitchesPublisher
 
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
@@ -14,6 +16,8 @@ defmodule Rpi4Mouse.Rclex do
   def init(args) do
     node_name = Keyword.get(args, :node_name, "rpi4_mouse")
     ifname = Keyword.get(args, :ifname, "eth0")
+    light_interval_ms = Keyword.get(args, :light_sensors_publish_interval_ms, 100)
+    switch_interval_ms = Keyword.get(args, :switches_publish_interval_ms, 100)
 
     wait_for_interface(ifname)
 
@@ -23,7 +27,9 @@ defmodule Rpi4Mouse.Rclex do
     children = [
       {CmdVelSubscriber, [node_name: node_name]},
       {BuzzerSubscriber, [node_name: node_name]},
-      {LedsSubscriber, [node_name: node_name]}
+      {LedsSubscriber, [node_name: node_name]},
+      {LightSensorsPublisher, [node_name: node_name, interval_ms: light_interval_ms]},
+      {SwitchesPublisher, [node_name: node_name, interval_ms: switch_interval_ms]}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
