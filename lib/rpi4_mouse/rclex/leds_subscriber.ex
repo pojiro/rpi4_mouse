@@ -44,11 +44,7 @@ defmodule Rpi4Mouse.Rclex.LedsSubscriber do
       Logger.debug("#{__MODULE__}: received /leds: #{inspect(msg)}")
     end
 
-    # TODO: LED制御を呼び出す
-    # Task.start_link(fn -> Rpi4Mouse.Rtmouse.Led.drive(:led0, msg) end)
-    # Task.start_link(fn -> Rpi4Mouse.Rtmouse.Led.drive(:led1, msg) end)
-    # Task.start_link(fn -> Rpi4Mouse.Rtmouse.Led.drive(:led2, msg) end)
-    # Task.start_link(fn -> Rpi4Mouse.Rtmouse.Led.drive(:led3, msg) end)
+    Rpi4Mouse.Rtmouse.Leds.light(msg)
 
     {:noreply, state}
   end

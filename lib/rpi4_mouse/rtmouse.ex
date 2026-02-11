@@ -5,6 +5,7 @@ defmodule Rpi4Mouse.Rtmouse do
 
   alias Rpi4Mouse.Rtmouse.Motors
   alias Rpi4Mouse.Rtmouse.Buzzer
+  alias Rpi4Mouse.Rtmouse.Leds
 
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
@@ -32,7 +33,14 @@ defmodule Rpi4Mouse.Rtmouse do
          right_device: "/dev/rtmotor_raw_r0",
          enable_device: "/dev/rtmotoren0"
        ]},
-      {Buzzer, [buzzer_device: "/dev/rtbuzzer0"]}
+      {Buzzer, [buzzer_device: "/dev/rtbuzzer0"]},
+      {Leds,
+       [
+         led0_device: "/dev/rtled0",
+         led1_device: "/dev/rtled1",
+         led2_device: "/dev/rtled2",
+         led3_device: "/dev/rtled3"
+       ]}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
