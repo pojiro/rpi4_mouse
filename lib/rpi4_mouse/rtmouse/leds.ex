@@ -6,16 +6,33 @@ defmodule Rpi4Mouse.Rtmouse.Leds do
   @led_off 0
   @led_on 1
 
+  @type led_input :: %{
+          led0: boolean(),
+          led1: boolean(),
+          led2: boolean(),
+          led3: boolean()
+        }
+
+  @type led_state :: led_input()
+
   # API
 
-  @spec light(msg :: map()) :: :ok | {:error, atom()}
-  def light(msg) do
-    GenServer.call(__MODULE__, {:light, msg})
+  @doc """
+  Set LED states using a map with `:led0`..`:led3` boolean values.
+
+  Returns `{:error, :invalid_led_value}` when any value is not a boolean.
+  """
+  @spec light(leds :: led_input()) :: :ok | {:error, atom()}
+  def light(leds) do
+    GenServer.call(__MODULE__, {:light, leds})
   end
 
-  @spec get_states() :: map()
-  def get_states() do
-    GenServer.call(__MODULE__, :get_states)
+  @doc """
+  Get the current LED states as a map.
+  """
+  @spec get_lights() :: led_state()
+  def get_lights() do
+    GenServer.call(__MODULE__, :get_lights)
   end
 
   def start_link(args) do
@@ -71,12 +88,12 @@ defmodule Rpi4Mouse.Rtmouse.Leds do
     File.close(state.led3)
   end
 
-  def handle_call({:light, msg}, _from, state) do
+  def handle_call({:light, leds}, _from, state) do
     # LED値変換と書き込み
-    with {:ok, led0_val} <- to_led_value(msg.led0),
-         {:ok, led1_val} <- to_led_value(msg.led1),
-         {:ok, led2_val} <- to_led_value(msg.led2),
-         {:ok, led3_val} <- to_led_value(msg.led3) do
+    with {:ok, led0_val} <- to_led_value(leds.led0),
+         {:ok, led1_val} <- to_led_value(leds.led1),
+         {:ok, led2_val} <- to_led_value(leds.led2),
+         {:ok, led3_val} <- to_led_value(leds.led3) do
       # LED書き込み
       IO.write(state.led0, "#{led0_val}")
       IO.write(state.led1, "#{led1_val}")
@@ -99,7 +116,7 @@ defmodule Rpi4Mouse.Rtmouse.Leds do
     end
   end
 
-  def handle_call(:get_states, _from, state) do
+  def handle_call(:get_lights, _from, state) do
     {:reply,
      %{
        led0: state.led0_state,

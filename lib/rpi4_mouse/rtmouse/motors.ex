@@ -9,11 +9,19 @@ defmodule Rpi4Mouse.Rtmouse.Motors do
 
   # API
 
-  @spec drive(msg :: map()) :: :ok
-  def drive(%{twist: %{linear: %{x: x}, angular: %{z: z}}} = _msg) do
-    GenServer.call(__MODULE__, {:drive, {x, z}})
+  @doc """
+  Drive motors using linear and angular velocity inputs.
+
+  Returns `{:error, :pwm_out_of_range}` when the computed PWM exceeds limits.
+  """
+  @spec drive(linear_x :: number(), angular_z :: number()) :: :ok | {:error, atom()}
+  def drive(linear_x, angular_z) do
+    GenServer.call(__MODULE__, {:drive, {linear_x, angular_z}})
   end
 
+  @doc """
+  Get the current motor state (enabled flag and PWM values).
+  """
   @spec get_state() :: map()
   def get_state() do
     GenServer.call(__MODULE__, :get_state)

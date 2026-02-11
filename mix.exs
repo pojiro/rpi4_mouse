@@ -43,6 +43,7 @@ defmodule Rpi4Mouse.MixProject do
        override: true},
       rpi4_mouse_ui(),
       {:muontrap, "~> 1.0"},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
 
       # Allow Nerves.Runtime on host to support development, testing and CI.
       # See config/host.exs for usage.

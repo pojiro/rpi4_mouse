@@ -29,16 +29,20 @@ defmodule Rpi4Mouse.Rclex do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
-  defp wait_for_interface(ifname) do
-    case VintageNet.get(["interface", ifname, "connection"]) do
-      status when status in [:lan, :internet] ->
-        Logger.info("#{__MODULE__}: interface #{ifname} is up with status: #{status}")
-        :ok
+  if Mix.target() == :host do
+    defp wait_for_interface(_ifname), do: :ok
+  else
+    defp wait_for_interface(ifname) do
+      case VintageNet.get(["interface", ifname, "connection"]) do
+        status when status in [:lan, :internet] ->
+          Logger.info("#{__MODULE__}: interface #{ifname} is up with status: #{status}")
+          :ok
 
-      _ ->
-        Logger.debug("#{__MODULE__}: waiting for interface #{ifname}...")
-        Process.sleep(1000)
-        wait_for_interface(ifname)
+        _ ->
+          Logger.debug("#{__MODULE__}: waiting for interface #{ifname}...")
+          Process.sleep(1000)
+          wait_for_interface(ifname)
+      end
     end
   end
 end

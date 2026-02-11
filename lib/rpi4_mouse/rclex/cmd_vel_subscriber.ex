@@ -44,7 +44,8 @@ defmodule Rpi4Mouse.Rclex.CmdVelSubscriber do
       Logger.debug("#{__MODULE__}: received /cmd_vel: #{inspect(msg)}")
     end
 
-    Rpi4Mouse.Rtmouse.Motors.drive(msg)
+    %{twist: %{linear: %{x: x}, angular: %{z: z}}} = msg
+    Rpi4Mouse.Rtmouse.Motors.drive(x, z)
 
     {:noreply, state}
   end

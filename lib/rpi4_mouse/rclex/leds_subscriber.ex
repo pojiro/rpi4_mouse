@@ -44,7 +44,8 @@ defmodule Rpi4Mouse.Rclex.LedsSubscriber do
       Logger.debug("#{__MODULE__}: received /leds: #{inspect(msg)}")
     end
 
-    Rpi4Mouse.Rtmouse.Leds.light(msg)
+    leds = %{led0: msg.led0, led1: msg.led1, led2: msg.led2, led3: msg.led3}
+    Rpi4Mouse.Rtmouse.Leds.light(leds)
 
     {:noreply, state}
   end

@@ -8,11 +8,21 @@ defmodule Rpi4Mouse.Rtmouse.Buzzer do
 
   # API
 
-  @spec beep(msg :: map()) :: :ok | {:error, atom()}
-  def beep(%{data: hz} = _msg) do
+  @doc """
+  Set buzzer frequency in Hz.
+
+  Returns `{:error, :invalid_frequency}` if the value is outside the supported range.
+  """
+  @spec beep(hz :: non_neg_integer()) :: :ok | {:error, atom()}
+  def beep(hz) when is_integer(hz) and @min_freq <= hz and hz <= @max_freq do
     GenServer.call(__MODULE__, {:beep, hz})
   end
 
+  def beep(_hz), do: {:error, :invalid_frequency}
+
+  @doc """
+  Get the current buzzer frequency in Hz.
+  """
   @spec get_tone() :: integer()
   def get_tone() do
     GenServer.call(__MODULE__, :get_tone)
