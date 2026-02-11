@@ -56,7 +56,9 @@ defmodule Rpi4Mouse.Rtmouse.Motors do
        enable: enable_file,
        enabled?: false,
        left_pwm: 0,
-       right_pwm: 0
+       right_pwm: 0,
+       left_velocity: 0.0,
+       right_velocity: 0.0
      }}
   end
 
@@ -91,7 +93,13 @@ defmodule Rpi4Mouse.Rtmouse.Motors do
       IO.write(state.left, "#{left_pwm}")
       IO.write(state.right, "#{right_pwm}")
 
-      new_state = %{state | left_pwm: left_pwm, right_pwm: right_pwm}
+      new_state = %{
+        state
+        | left_pwm: left_pwm,
+          right_pwm: right_pwm,
+          left_velocity: left_velocity,
+          right_velocity: right_velocity
+      }
 
       # タイムアウト付きで返す: @timeout_ms 間メッセージが来なければ handle_info(:timeout) が呼ばれる
       {:reply, :ok, new_state, @timeout_ms}
@@ -107,7 +115,9 @@ defmodule Rpi4Mouse.Rtmouse.Motors do
      %{
        enabled?: state.enabled?,
        left_pwm: state.left_pwm,
-       right_pwm: state.right_pwm
+       right_pwm: state.right_pwm,
+       left_velocity: state.left_velocity,
+       right_velocity: state.right_velocity
      }, state}
   end
 

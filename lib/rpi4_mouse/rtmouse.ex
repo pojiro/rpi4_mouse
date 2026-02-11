@@ -8,6 +8,7 @@ defmodule Rpi4Mouse.Rtmouse do
   alias Rpi4Mouse.Rtmouse.Leds
   alias Rpi4Mouse.Rtmouse.LightSensors
   alias Rpi4Mouse.Rtmouse.Switches
+  alias Rpi4Mouse.UiPublisher
 
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
@@ -49,7 +50,8 @@ defmodule Rpi4Mouse.Rtmouse do
          switch0_device: "/dev/rtswitch0",
          switch1_device: "/dev/rtswitch1",
          switch2_device: "/dev/rtswitch2"
-       ]}
+       ]},
+      {UiPublisher, []}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
