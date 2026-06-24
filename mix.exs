@@ -36,7 +36,7 @@ defmodule Rpi4Mouse.MixProject do
       {:nerves, "~> 1.10", runtime: false},
       {:shoehorn, "~> 0.9.1"},
       {:ring_logger, "~> 0.11.0"},
-      {:toolshed, "~> 0.4.0"},
+      {:toolshed, "~> 0.5.0"},
       {:rclex,
        git: "https://github.com/rclex/rclex",
        branch: "support-jazzy-rclex-prep-ros2",
