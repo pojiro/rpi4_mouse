@@ -23,12 +23,8 @@ defmodule Rpi4Mouse.Rclex.LedsSubscriber do
     pid = self()
 
     :ok =
-      Rclex.start_subscription(
-        fn msg -> send(pid, {:leds, msg}) end,
-        RaspimouseMsgs.Msg.Leds,
-        "/leds",
-        node_name
-      )
+      fn msg -> send(pid, {:leds, msg}) end
+      |> Rclex.start_subscription(RaspimouseMsgs.Msg.Leds, "/leds", node_name)
 
     Logger.info("#{__MODULE__}: subscribed to /leds")
 
