@@ -54,19 +54,17 @@ export MIX_TARGET=rpi4_mouse
 
 # Get dependencies
 mix deps.get
-mix deps.compile
 
 # Prepare ROS2 (for arm64v8 target)
 export ROS_DISTRO=jazzy
-mix rclex.prep.ros2 --arch arm64v8
+mix rclex.prep.ros2 --arch arm64v8 --dockerfile Dockerfile
 
-# Copy raspimouse_msgs include/lib/share to rootfs_overlay/opt/ros/jazzy
 # Generate ROS2 message bindings
 mix rclex.gen.msgs
 
 # Build and upload firmware
 mix prod.firmware
-mix prod.upload
+mix prod.upload # or MIX_ENV=prod mix burn
 ```
 
 ### Control from Host PC
@@ -83,6 +81,11 @@ sudo adduser $USER input
 Install [raspimouse_ros2_examples](https://github.com/rt-net/raspimouse_ros2_examples) on your host PC:
 
 ```bash
+# terminal1
+export RMW_IMPLEMENTATION=rmw_zenoh_cpp
+ros2 run rmw_zenoh_cpp rmw_zenohd
+# terminal2
+export RMW_IMPLEMENTATION=rmw_zenoh_cpp
 ros2 launch raspimouse_ros2_examples teleop_joy.launch.py mouse:=true
 ```
 

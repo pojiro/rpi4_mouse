@@ -58,12 +58,16 @@ defmodule Rpi4Mouse.Rtmouse.Motors do
        left_pwm: 0,
        right_pwm: 0,
        left_velocity: 0.0,
-       right_velocity: 0.0
+       right_velocity: 0.0,
+       disable_motors_token: nil,
+       disable_motors_timer: nil
      }}
   end
 
   def terminate(reason, state) do
     Logger.error("#{__MODULE__}: terminated by #{inspect(reason)}.")
+
+    if state.disable_motors_timer, do: Process.cancel_timer(state.disable_motors_timer)
 
     # 終了時は必ず停止
     IO.write(state.left, "0")
@@ -93,16 +97,24 @@ defmodule Rpi4Mouse.Rtmouse.Motors do
       IO.write(state.left, "#{left_pwm}")
       IO.write(state.right, "#{right_pwm}")
 
+      if state.disable_motors_timer, do: Process.cancel_timer(state.disable_motors_timer)
+
+      disable_motors_token = make_ref()
+
+      disable_motors_timer =
+        Process.send_after(self(), {:disable_motors, disable_motors_token}, @timeout_ms)
+
       new_state = %{
         state
         | left_pwm: left_pwm,
           right_pwm: right_pwm,
           left_velocity: left_velocity,
-          right_velocity: right_velocity
+          right_velocity: right_velocity,
+          disable_motors_token: disable_motors_token,
+          disable_motors_timer: disable_motors_timer
       }
 
-      # タイムアウト付きで返す: @timeout_ms 間メッセージが来なければ handle_info(:timeout) が呼ばれる
-      {:reply, :ok, new_state, @timeout_ms}
+      {:reply, :ok, new_state}
     else
       _ ->
         Logger.error("#{__MODULE__}: PWM out of range")
@@ -121,14 +133,28 @@ defmodule Rpi4Mouse.Rtmouse.Motors do
      }, state}
   end
 
-  def handle_info(:timeout, state) do
-    Logger.info("#{__MODULE__}: timeout - disabling motors")
+  def handle_info({:disable_motors, token}, %{disable_motors_token: token} = state) do
+    Logger.info("#{__MODULE__}: disabling motors")
 
     IO.write(state.left, "0")
     IO.write(state.right, "0")
     IO.write(state.enable, "0")
 
-    {:noreply, %{state | enabled?: false, left_pwm: 0, right_pwm: 0}}
+    {:noreply,
+     %{
+       state
+       | enabled?: false,
+         left_pwm: 0,
+         right_pwm: 0,
+         left_velocity: 0.0,
+         right_velocity: 0.0,
+         disable_motors_token: nil,
+         disable_motors_timer: nil
+     }}
+  end
+
+  def handle_info({:disable_motors, _stale_token}, state) do
+    {:noreply, state}
   end
 
   # Private

@@ -45,7 +45,7 @@
   "property_table": {:hex, :property_table, "0.3.4", "576b20f586ee7366d53919289c1b6dee4bbe1946f6761bfb20dabf7875cb4d40", [:mix], [], "hexpm", "1a45e5d4915ba017822e9692b447432f786cf63c89a6d71b7582eef666fd54b9"},
   "ranch": {:hex, :ranch, "2.2.0", "25528f82bc8d7c6152c57666ca99ec716510fe0925cb188172f41ce93117b1b0", [:make, :rebar3], [], "hexpm", "fa0b99a1780c80218a4197a59ea8d3bdae32fbff7e88527d7d8a4787eff4f8e7"},
   "raspimouse2_ex": {:git, "https://github.com/pojiro/raspimouse2_ex.git", "012860682723d9e440205a3b51f9e9a06f1db759", [branch: "main"]},
-  "rclex": {:hex, :rclex, "0.13.1", "05940be2f2d9710521fb6d144d386816a70c5d85f4ab761d59567cd6c084c640", [:make, :mix], [{:elixir_make, "~> 0.7", [hex: :elixir_make, repo: "hexpm", optional: false]}, {:nimble_parsec, "~> 1.0", [hex: :nimble_parsec, repo: "hexpm", optional: false]}], "hexpm", "8fd7835b8c125371c6567271e18e3790630aacdbe5a5d116a046c80f76e4f0c3"},
+  "rclex": {:git, "https://github.com/rclex/rclex", "2ed92aaaba1e4a1b69bd714abc169f621744dfe8", [branch: "add-dockerfile-option-to-prep-ros2"]},
   "ring_logger": {:hex, :ring_logger, "0.11.5", "b799ce644a593691f81895fd0903eb0a8a6bff8df9733b891b0da53be21217fe", [:mix], [{:circular_buffer, "~> 0.4.0 or ~> 1.0", [hex: :circular_buffer, repo: "hexpm", optional: false]}], "hexpm", "ec7a309bfa92dac3a85e8903454fe85b2159169329291563437dc8085437ad3a"},
   "rpi4_mouse_ui": {:git, "git@github.com:pojiro/rpi4_mouse_ui.git", "979837c787b53161036c86b11545d9eea88f4d0d", []},
   "shoehorn": {:hex, :shoehorn, "0.9.3", "88b79efa6c3cf42395d0635b2b6a41d1774275abb4a4889c0288874446d33d88", [:mix], [], "hexpm", "376ccf28e1d57a7f9d73ea93130e711886e88f4464a2cb9355787fd23897bbba"},
